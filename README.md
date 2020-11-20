@@ -1,5 +1,10 @@
 # vue-grid-control
 
+A prototype of a low level grid control for making various griddy things.
+
+## TODO
+- Revise how cell values and column headers are hydrated in the grid
+
 ## Project setup
 ```
 yarn install
