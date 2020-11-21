@@ -1,56 +1,61 @@
 <template>
-  <grid-control
-      @click-cell-control="clickCell"
-      @focus-cell-control="focusCell"
-      @blur-cell-control="blurCell"
-      @blur-grid="blurGrid"
-      :columns="headers.length"
-      :rows="records.length"
-      :records="records"
-      :headers="headers"
-      :disable-cell-func="(colIdx, rowIdx) => (records[rowIdx][headers[colIdx]])"
-      cell-tag="button"
-      class="grid-control">
-      <template v-slot="{value}">
-        {{ value }}
-      </template>
-    </grid-control>
+  <div>
+    <h1>Examples</h1>
+    <h2>Keyboard controls</h2>
+    <dl>
+      <dt>Left key</dt>
+      <dd>Previous enabled cell control</dd>
+
+      <dt>Right key</dt>
+      <dd>Next enabled cell control</dd>
+
+      <dt>Up key</dt>
+      <dd>Previous enabled cell control in column</dd>
+
+      <dt>Down key</dt>
+      <dd>Next enabled cell control in column</dd>
+
+      <dt>Page Up key</dt>
+      <dd>First enabled cell control in column</dd>
+
+      <dt>Page Down key</dt>
+      <dd>Last enabled cell control in column</dd>
+
+      <dt>Home key</dt>
+      <dd>First enabled cell control in row</dd>
+
+      <dt>End key</dt>
+      <dd>Last enabled cell control in row</dd>
+
+      <dt>Ctrl+Home key</dt>
+      <dd>First enabled cell control in grid</dd>
+
+      <dt>Ctrl+End key</dt>
+      <dd>Last enabled cell control in grid</dd>
+    </dl>
+    <standard-use></standard-use>
+    <event-handling></event-handling>
+    <custom-control-tag></custom-control-tag>
+    <conditional-active-cells />
+    <slot-usage />
+  </div>
 </template>
 
 <script>
-import GridControl from "./components/GridControl.vue";
+import StandardUse from "../examples/standard-use.vue";
+import EventHandling from "../examples/event-handling.vue";
+import CustomControlTag from "../examples/custom-control-element.vue";
+import ConditionalActiveCells from "../examples/conditional-active-cells.vue";
+import SlotUsage from "../examples/slot-usage.vue";
 
 export default {
   name: "App",
   components: {
-    GridControl
+    StandardUse,
+    EventHandling,
+    ConditionalActiveCells,
+    CustomControlTag,
+    SlotUsage
   },
-  data() {
-    return {
-      headers: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
-      records: [
-        { "mon": true, "tue": false, "wed": false, "thu": false, "fri": true, "sat": false, "sun": true, },
-        { "mon": true, "tue": false, "wed": false, "thu": false, "fri": true, "sat": false, "sun": true, },
-        { "mon": true, "tue": true, "wed": false, "thu": false, "fri": true, "sat": false, "sun": true, },
-        { "mon": true, "tue": false, "wed": false, "thu": false, "fri": true, "sat": false, "sun": true, },
-        { "mon": false, "tue": false, "wed": false, "thu": false, "fri": true, "sat": false, "sun": true, },
-        { "mon": true, "tue": true, "wed": true, "thu": true, "fri": true, "sat": true, "sun": true, },
-      ]
-    }
-  },
-  methods: {
-    clickCell({ colIdx, rowIdx, value, rowData }) {
-      console.log("clickCell", { colIdx, rowIdx, value, rowData })
-    },
-    focusCell({ colIdx, rowIdx, value, rowData }) {
-      console.log("focusCell", { colIdx, rowIdx, value, rowData })
-    },
-    blurCell({ colIdx, rowIdx, value, rowData }) {
-      console.log("blurCell", { colIdx, rowIdx, value, rowData })
-    },
-    blurGrid() {
-      console.log("blurGrid")
-    }
-  }
 };
 </script>

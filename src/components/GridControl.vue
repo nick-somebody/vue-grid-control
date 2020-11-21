@@ -19,7 +19,7 @@
           role="gridcell"
         >
           <component
-            :is="cellTag"
+            :is="controlTag"
             :tabindex="cell.disabled ? -1 : 0"
             :disabled="cell.disabled"
             :aria-colindex="colIdx"
@@ -85,9 +85,10 @@ const makeGridMap = (rows, columns, records, headers, disableCellFunc) => {
       grid.rows[rowIdx] = []
       let colEntries = {}
       for (let colIdx = 0; colIdx < columns; colIdx++) {
-        const value = hasRecords && hasColumns ? record[headers[colIdx]] : colIdx;
+        const [key, value] = hasRecords && hasColumns ? [headers[colIdx], record[headers[colIdx]]] : [String(colIdx), colIdx];
         const disabled = disableCellFunc(colIdx, rowIdx, value, record)
         grid.map[rowIdx][colIdx] = {
+          key,
           value,
           disabled,
           colIdx,
@@ -122,7 +123,7 @@ export default {
     rows: {
       required: true,
     },
-    cellTag: {
+    controlTag: {
       default: 'div'
     },
     records: { default: null},
@@ -163,17 +164,17 @@ export default {
     return data
   },
   methods: {
-    clickCellControl({ colIdx, rowIdx, value, rowData }) {
-      this.$emit("click-cell-control", { colIdx, rowIdx, value, rowData })
+    clickCellControl({ colIdx, rowIdx, key, value, rowData }) {
+      this.$emit("click-cell-control", { colIdx, rowIdx, key, value, rowData })
     },
-    focusCellControl({ colIdx, rowIdx, value, rowData }) {
+    focusCellControl({ colIdx, rowIdx, key, value, rowData }) {
       this.focusedRow = rowIdx
       this.focusedCol = colIdx
-      this.$emit("focus-cell-control", { colIdx, rowIdx, value, rowData })
+      this.$emit("focus-cell-control", { colIdx, rowIdx, key, value, rowData })
     },
-    blurCellControl({ colIdx, rowIdx, value, rowData }) {
+    blurCellControl({ colIdx, rowIdx, key, value, rowData }) {
       // if we do not get a changed index, focus has left the grid
-      this.$emit("blur-cell-control", { colIdx, rowIdx, value, rowData })
+      this.$emit("blur-cell-control", { colIdx, rowIdx, key, value, rowData })
       setTimeout(() => {
         if (this.focusedRow === rowIdx && this.focusedCol === colIdx) {
           this.blurGrid()
