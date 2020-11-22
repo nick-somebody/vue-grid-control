@@ -47,12 +47,16 @@ export default GridControl(getFocusedCellElement)
 <style scoped>
 .grid {
   display: grid;
-  gap: 20px;
+  column-gap: 50px;
+  row-gap: 10px;
   width: 100%;
 }
 .cell-control {
   width: 100%;
   height: 20px;
-  padding: 5px;
+  padding: 5px 0;
+  border-radius: 20px;
+  text-align: center;
+  border: 1px solid blue;
 }
 </style>
