@@ -11,16 +11,26 @@ const setFirstRow = (grid, rowIdx) => {
   }
 }
 
+const setGridEnabledCellInfo = (grid, colIdx, rowIdx) => {
+  grid.rows[rowIdx].push(colIdx)
+  grid.cols[colIdx].push(rowIdx)
+  
+  setFirstCol(grid, colIdx)
+  setFirstRow(grid, rowIdx)
+
+  grid.lastPosition = [colIdx, rowIdx]
+}
+
 const makeGridMap = (rows, columns, records, disableCellFunc) => {
   const hasRecords = !!records
 
   return computed(() => {
     const grid = {
       map: {},
-      rows: {},
-      cols: {},
-      lastPosition: [-1, -1],
-      firstPosition: [-1, -1],
+      rows: {}, // 2D array of enabled cells by row
+      cols: {}, // 2D array of enabled cells by column
+      lastPosition: [-1, -1], // last  enabled position in grid
+      firstPosition: [-1, -1], // first  enabled position in grid
     }
     for (let rowIdx = 0; rowIdx < rows; rowIdx++) {
       const record = hasRecords ? records[rowIdx] : {};
@@ -46,14 +56,7 @@ const makeGridMap = (rows, columns, records, disableCellFunc) => {
         }
         if (!grid.cols[colIdx]) { grid.cols[colIdx] = [] }
         if (!disabled) {
-          // console.log("enabled")
-          grid.rows[rowIdx].push(colIdx)
-          grid.cols[colIdx].push(rowIdx)
-          
-          setFirstCol(grid, colIdx)
-          setFirstRow(grid, rowIdx)
-
-          grid.lastPosition = [colIdx, rowIdx]
+          setGridEnabledCellInfo(grid, colIdx, rowIdx)
         }
       }
     }
@@ -157,7 +160,6 @@ export default (getFocusedCellElement) => {
       moveLeft() {
         let row = this.gridMap.rows[this.focusedRow]
         const enabledCellIdx = row.indexOf(this.focusedCol)
-        // console.log(row, enabledCellIdx)
   
         if (enabledCellIdx > 0) {
           this.focusedCol = row[enabledCellIdx - 1]
