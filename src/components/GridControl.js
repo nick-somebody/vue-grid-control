@@ -160,20 +160,21 @@ export default (getFocusedCellElement) => {
       moveLeft() {
         let row = this.gridMap.rows[this.focusedRow]
         const enabledCellIdx = row.indexOf(this.focusedCol)
-  
+        
         if (enabledCellIdx > 0) {
           this.focusedCol = row[enabledCellIdx - 1]
-        } else {
-          let targetRow = this.focusedRow - 1
-          while (this.gridMap.rows[targetRow]) {
-            row = this.gridMap.rows[targetRow]
-            if (row.length) {
-              this.focusedRow = targetRow
-              this.focusedCol = row[row.length - 1]
-              break
-            }
-            targetRow -= 1
+          return
+        }
+        // search previous rows for cell to move to
+        let targetRow = this.focusedRow - 1
+        while (this.gridMap.rows[targetRow]) {
+          row = this.gridMap.rows[targetRow]
+          if (row.length) {
+            this.focusedRow = targetRow
+            this.focusedCol = row[row.length - 1]
+            break
           }
+          targetRow -= 1
         }
       },
       moveRight() {
@@ -181,17 +182,18 @@ export default (getFocusedCellElement) => {
         const enabledCellIdx = row.indexOf(this.focusedCol)
         if (enabledCellIdx + 1 < row.length) {
           this.focusedCol = row[enabledCellIdx + 1]
-        } else {
-          let targetRow = this.focusedRow + 1
-          while (this.gridMap.rows[targetRow]) {
-            row = this.gridMap.rows[targetRow]
-            if (row.length) {
-              this.focusedRow = targetRow
-              this.focusedCol = row[0]
-              break
-            }
-            targetRow += 1
+          return
+        }
+        // search following rows for cell to move to
+        let targetRow = this.focusedRow + 1
+        while (this.gridMap.rows[targetRow]) {
+          row = this.gridMap.rows[targetRow]
+          if (row.length) {
+            this.focusedRow = targetRow
+            this.focusedCol = row[0]
+            break
           }
+          targetRow += 1
         }
       },
       moveRowStart() {
