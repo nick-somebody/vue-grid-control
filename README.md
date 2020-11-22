@@ -3,7 +3,8 @@
 A prototype of a low level grid control for making various griddy things.
 
 ## TODO
-- Add a kitchen sink example that allows a user to select cells
+- Add a range picker
+- Add a multi select picker
 
 ## Project setup
 ```
