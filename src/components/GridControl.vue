@@ -5,8 +5,9 @@
         <th
           v-for="(header, idx) in headers"
           :key="idx"
-          :class="{'header-focused-col': focusedCol === idx}">
-          {{header}}
+          :class="{ 'header-focused-col': focusedCol === idx }"
+        >
+          {{ header }}
         </th>
       </tr>
     </thead>
@@ -22,7 +23,7 @@
           role="gridcell"
           :class="{
             'focused-col': focusedCol === colIdx,
-            'focused-row': focusedRow === rowIdx,
+            'focused-row': focusedRow === rowIdx
           }"
         >
           <component
@@ -42,14 +43,18 @@
             @keydown.exact.page-down.prevent="moveColEnd"
             @focus.stop="focusCellControl(cell)"
             @blur.stop="blurCellControl(cell)"
-            @click="clickCellControl(cell)"
+            @click.shift.exact="shiftClickControl(cell)"
+            @click.ctrl.exact="ctrlClickControl(cell)"
+            @click.exact="clickCellControl(cell)"
+            @keydown.enter.prevent="select(cell, $event)"
+            @keydown.space.prevent="select(cell, $event)"
             class="cell-control"
             :class="{
               'focused-col': focusedCol === colIdx,
               'focused-row': focusedRow === rowIdx,
+              'selected': modelValue === cell.value,
             }"
-            >
-            
+          >
             <slot v-bind="cell">
               {{ cell.value }}
             </slot>
@@ -61,11 +66,11 @@
 </template>
 
 <script>
-import GridControl from './GridControl'
+import GridControl from "./GridControl";
 
 const getFocusedCellElement = (gridBody, { focusedRow, focusedCol }) => {
-  return gridBody.value.children[focusedRow].children[focusedCol].firstChild
-}
+  return gridBody.value.children[focusedRow].children[focusedCol].firstChild;
+};
 
-export default GridControl(getFocusedCellElement)
+export default GridControl(getFocusedCellElement);
 </script>
