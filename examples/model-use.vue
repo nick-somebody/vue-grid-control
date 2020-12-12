@@ -6,15 +6,17 @@
 
     <h2>Range model use</h2>
     <p>Start value: {{ start }}; End value: {{ end }}</p>
-    <grid-control :rows="3" :columns="3" :records="records" v-model:start="start" v-model:end="end" />
+    <grid-range-control :rows="3" :columns="3" :records="records" v-model:start="start" v-model:end="end" />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
 import GridControl from "../src/components/GridControl.vue";
+import GridRangeControl from "../src/components/GridRangeControl.vue";
+
 export default {
-  components: { GridControl },
+  components: { GridControl, GridRangeControl },
   setup() {
     const val = ref(null)
     const start = ref(null)

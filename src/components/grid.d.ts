@@ -13,6 +13,10 @@ export interface Grid {
   lastPosition: number[2];
   firstPosition: number[2];
 }
+export interface RangeGrid extends Grid {
+  rangeStart: number[2];
+  rangeEnd: number[2];
+}
 
 export type DisableCellFunc = (
   colIdx: number,

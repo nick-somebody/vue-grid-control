@@ -4,6 +4,8 @@ A prototype of a low level grid control for making various griddy things.
 
 ## TODO
 - Add a range picker
+  - needs in range check working
+  - needs to disable first value cell
 - Add a multi select picker
 
 ## Project setup
