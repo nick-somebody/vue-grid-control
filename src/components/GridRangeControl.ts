@@ -22,8 +22,8 @@ const setGridEnabledCellInfo = (grid: RangeGrid, colIdx: number, rowIdx: number)
   grid.lastPosition = [colIdx, rowIdx];
 };
 
-const makeGridMap = (rows: number, columns: number, records: any, disableCellFunc: DisableCellFunc, start: any, end: any): ComputedRef<RangeGrid> => {
-  const hasRecords = !!records;
+const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
+  const hasRecords = !!props.records;
 
   return computed<RangeGrid>(() => {
     const grid: RangeGrid = {
@@ -36,11 +36,11 @@ const makeGridMap = (rows: number, columns: number, records: any, disableCellFun
       rangeEnd: [-1, -1],
     };
     let inRange = false;
-    for (let rowIdx = 0; rowIdx < rows; rowIdx++) {
-      const record = hasRecords ? records[rowIdx] : {};
+    for (let rowIdx = 0; rowIdx < props.rows; rowIdx++) {
+      const record = hasRecords ? props.records[rowIdx] : {};
       grid.map[rowIdx] = {};
       grid.rows[rowIdx] = [];
-      for (let colIdx = 0; colIdx < columns; colIdx++) {
+      for (let colIdx = 0; colIdx < props.columns; colIdx++) {
         let key = String(colIdx);
         let value = colIdx;
         if (hasRecords) {
@@ -48,18 +48,11 @@ const makeGridMap = (rows: number, columns: number, records: any, disableCellFun
           key = keys[colIdx];
           value = record[key];
         }
-        console.log(start, end)
-        if (value === start) {
+        if (value === props.start) {
           grid.rangeStart = [colIdx, rowIdx]
-          inRange = true
-          console.log(inRange)
+          inRange = !!props.end
         }
-        if (value === end) {
-          grid.rangeEnd = [colIdx, rowIdx]
-          inRange = false
-          console.log(inRange)
-        }
-        const disabled = disableCellFunc(colIdx, rowIdx, value, record);
+        const disabled = props.disableCellFunc(colIdx, rowIdx, value, record);
         grid.map[rowIdx][colIdx] = {
           key,
           value,
@@ -69,6 +62,10 @@ const makeGridMap = (rows: number, columns: number, records: any, disableCellFun
           inRange,
           rowData: record
         };
+        if (value === props.end) {
+          grid.rangeEnd = [colIdx, rowIdx]
+          inRange = false
+        }
         if (!grid.cols[colIdx]) {
           grid.cols[colIdx] = [];
         }
@@ -120,12 +117,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       const gridBody = ref<unknown | HTMLElement>(null)
 
       const gridMap = makeGridMap(
-        props.rows,
-        props.columns,
-        props.records,
-        props.disableCellFunc,
-        props.start,
-        props.end,
+        props
       );
       const range = computed(() => {
         const r = {
@@ -168,7 +160,10 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       },
       emitModel(cellEvent: CellControlEvent) {
         if (!this.startEvent) {
+          this.$emit("update:start", cellEvent.value)
+          this.$emit("update:end", null)
           this.startEvent = cellEvent
+
         } else {
           if (this.isEventStart(this.startEvent, cellEvent)) {
             this.$emit("update:start", this.startEvent.value)

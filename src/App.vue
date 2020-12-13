@@ -110,7 +110,17 @@ button.cell-control {
 .cell-control:disabled {
   opacity: 0.4;
 }
+.in-range {
+  background: rgb(200, 255, 200);
+  /* box-shadow: inset 0 0 10px chartreuse; */
+}
 .focused-row.focused-col.selected, .selected {
   background: chartreuse;
 }
+/* .start {
+  border-right: 1px solid transparent;
+}
+.end {
+  border-left-color: 1px solid transparent;
+} */
 </style>
