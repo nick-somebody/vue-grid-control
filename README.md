@@ -3,7 +3,7 @@
 A prototype of a low level grid control for making various griddy things.
 
 ## TODO
-- Add a range picker
+- Add boundary flag to range picker
 - Add a multi select picker
 
 ## Project setup

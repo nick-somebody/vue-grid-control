@@ -113,10 +113,14 @@ button.cell-control {
 .cell-control:disabled {
   opacity: 0.4;
 }
-.in-range {
+.in-range,
+.in-range > *{
   background: rgb(200, 255, 200);
 }
-.focused-row.focused-col.selected, .selected {
+.focused-row.focused-col.selected,
+.selected,
+.focused-row.focused-col.selected > *,
+.selected > * {
   background: chartreuse;
 }
 </style>
