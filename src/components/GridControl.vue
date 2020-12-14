@@ -23,7 +23,8 @@
           role="gridcell"
           :class="{
             'focused-col': focusedCol === colIdx,
-            'focused-row': focusedRow === rowIdx
+            'focused-row': focusedRow === rowIdx,
+            'selected': modelValue === cell.value,
           }"
         >
           <component
@@ -49,11 +50,6 @@
             @keydown.enter.prevent="select(cell, $event)"
             @keydown.space.prevent="select(cell, $event)"
             class="cell-control"
-            :class="{
-              'focused-col': focusedCol === colIdx,
-              'focused-row': focusedRow === rowIdx,
-              'selected': modelValue === cell.value,
-            }"
           >
             <slot v-bind="cell">
               {{ cell.value }}

@@ -1,26 +1,6 @@
+import { setFirstCol, setFirstRow, setGridEnabledCellInfo } from '@/helpers';
 import { onMounted, ref, computed, reactive, watchEffect, defineComponent, UnwrapRef, Ref, ComputedRef } from "vue";
 import { CellControlEvent, DisableCellFunc, GetFocusedCellElementFunc, RangeGrid } from './grid';
-
-const setFirstCol = (grid: RangeGrid, colIdx: number) => {
-  if (grid.firstPosition[0] < 0) {
-    grid.firstPosition[0] = colIdx;
-  }
-};
-const setFirstRow = (grid: RangeGrid, rowIdx: number) => {
-  if (grid.firstPosition[1] < 0) {
-    grid.firstPosition[1] = rowIdx;
-  }
-};
-
-const setGridEnabledCellInfo = (grid: RangeGrid, colIdx: number, rowIdx: number) => {
-  grid.rows[rowIdx].push(colIdx);
-  grid.cols[colIdx].push(rowIdx);
-
-  setFirstCol(grid, colIdx);
-  setFirstRow(grid, rowIdx);
-
-  grid.lastPosition = [colIdx, rowIdx];
-};
 
 const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
   const hasRecords = !!props.records;
@@ -48,11 +28,14 @@ const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
           key = keys[colIdx];
           value = record[key];
         }
-        if (value === props.start) {
+        const isStart = value === props.start
+        console.log(isStart, value)
+        if (isStart) {
           grid.rangeStart = [colIdx, rowIdx]
+          // inRange can only be true if there is an end
           inRange = !!props.end
         }
-        const disabled = props.disableCellFunc(colIdx, rowIdx, value, record);
+        const disabled = isStart || props.disableCellFunc(colIdx, rowIdx, value, record);
         grid.map[rowIdx][colIdx] = {
           key,
           value,
@@ -119,14 +102,6 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       const gridMap = makeGridMap(
         props
       );
-      const range = computed(() => {
-        const r = {
-          start: {},
-          end: {},
-        }
-
-        return r
-      })
 
       const data = reactive({
         focusedRow: -1,
@@ -153,7 +128,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       return data;
     },
     methods: {
-      isEventStart(event1: CellControlEvent, event2: CellControlEvent): boolean {
+      isRangeStart(event1: CellControlEvent, event2: CellControlEvent): boolean {
         if (event1.rowIdx < event2.rowIdx) { return true }
         if (event1.rowIdx > event2.rowIdx) { return false }
         return event1.colIdx < event2.colIdx
@@ -165,7 +140,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
           this.startEvent = cellEvent
 
         } else {
-          if (this.isEventStart(this.startEvent, cellEvent)) {
+          if (this.isRangeStart(this.startEvent, cellEvent)) {
             this.$emit("update:start", this.startEvent.value)
             this.$emit("update:end", cellEvent.value)
           } else {
@@ -177,20 +152,17 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
 
       },
       select(cellEvent: CellControlEvent, keyEvent: KeyboardEvent) {
+        if (cellEvent.disabled) { return }
         this.emitModel(cellEvent)
-        if(keyEvent.shiftKey) {
-          console.log("shift")
-        }
-        if (keyEvent.ctrlKey) {
-          console.log("control")
-        }
       },
       // for select, need to check if selected already
       shiftClickControl(cellEvent: CellControlEvent) {
+        if (cellEvent.disabled) { return }
         // shift is for range select
         this.$emit("shift-click-cell-control", cellEvent)
       },
       ctrlClickControl(cellEvent: CellControlEvent) {
+        if (cellEvent.disabled) { return }
         // ctrl is for multi select
         this.$emit("ctrl-click-cell-control", cellEvent)
       },
@@ -198,6 +170,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         return this.gridMap.map[place.rowIdx][place.colIdx]
       },
       clickCellControl(cellEvent: CellControlEvent) {
+        if (cellEvent.disabled) { return }
         this.$emit("click-cell-control", cellEvent)
         this.emitModel(cellEvent)
       },

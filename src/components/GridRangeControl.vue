@@ -28,6 +28,7 @@
             'start': start === cell.value,
             'end': end === cell.value,
             'in-range': cell.inRange,
+            'disabled': cell.disabled,
           }"
         >
           <component
@@ -53,12 +54,6 @@
             @keydown.enter.prevent="select(cell, $event)"
             @keydown.space.prevent="select(cell, $event)"
             class="cell-control"
-            :class="{
-              'focused-col': focusedCol === colIdx,
-              'focused-row': focusedRow === rowIdx,
-              'selected': start === cell.value || end === cell.value,
-              'in-range': cell.inRange,
-            }"
           >
             <slot v-bind="cell">
               {{ cell.value }}

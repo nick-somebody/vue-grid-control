@@ -1,26 +1,6 @@
+import { setFirstCol, setFirstRow, setGridEnabledCellInfo } from '@/helpers';
 import { onMounted, ref, computed, reactive, watchEffect, defineComponent, UnwrapRef, Ref, ComputedRef } from "vue";
 import { CellControlEvent, DisableCellFunc, GetFocusedCellElementFunc, Grid } from './grid';
-
-const setFirstCol = (grid: Grid, colIdx: number) => {
-  if (grid.firstPosition[0] < 0) {
-    grid.firstPosition[0] = colIdx;
-  }
-};
-const setFirstRow = (grid: Grid, rowIdx: number) => {
-  if (grid.firstPosition[1] < 0) {
-    grid.firstPosition[1] = rowIdx;
-  }
-};
-
-const setGridEnabledCellInfo = (grid: Grid, colIdx: number, rowIdx: number) => {
-  grid.rows[rowIdx].push(colIdx);
-  grid.cols[colIdx].push(rowIdx);
-
-  setFirstCol(grid, colIdx);
-  setFirstRow(grid, rowIdx);
-
-  grid.lastPosition = [colIdx, rowIdx];
-};
 
 const makeGridMap = (rows: number, columns: number, records: any, disableCellFunc: DisableCellFunc): ComputedRef<Grid> => {
   const hasRecords = !!records;
@@ -133,14 +113,12 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       return data;
     },
     methods: {
-      select(cellEvent: CellControlEvent, keyEvent: KeyboardEvent) {
+      emitModel(cellEvent: CellControlEvent) {
         this.$emit("update:modelValue", cellEvent.value)
-        if(keyEvent.shiftKey) {
-          console.log("shift")
-        }
-        if (keyEvent.ctrlKey) {
-          console.log("control")
-        }
+      },
+      select(cellEvent: CellControlEvent, keyEvent: KeyboardEvent) {
+        if (cellEvent.disabled) { return }
+        this.emitModel(cellEvent)
       },
       // for select, need to check if selected already
       shiftClickControl(cellEvent: CellControlEvent) {
@@ -156,7 +134,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       },
       clickCellControl(cellEvent: CellControlEvent) {
         this.$emit("click-cell-control", cellEvent)
-        this.$emit("update:modelValue", cellEvent.value)
+        this.emitModel(cellEvent)
       },
       focusCellControl(cellEvent: CellControlEvent) {
         this.focusedRow = cellEvent.rowIdx;

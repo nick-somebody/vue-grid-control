@@ -41,4 +41,5 @@ export interface CellControlEvent {
   key: string;
   value: any;
   rowData: any;
+  disabled: boolean;
 }

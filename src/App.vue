@@ -96,14 +96,17 @@ button.cell-control {
   color: #000;
 }
 .cell-control {
-  background: #FFF;
   width: 100%;
   height: 100%;
 }
-.focused-row, .focused-col  {
+.focused-row,
+.focused-col,
+.focused-row > *,
+.focused-col > * {
   background: lightblue;
 }
-.focused-row.focused-col {
+.focused-row.focused-col,
+.focused-row.focused-col > * {
   background: turquoise;
   outline: 2px solid black;
 }
@@ -112,15 +115,8 @@ button.cell-control {
 }
 .in-range {
   background: rgb(200, 255, 200);
-  /* box-shadow: inset 0 0 10px chartreuse; */
 }
 .focused-row.focused-col.selected, .selected {
   background: chartreuse;
 }
-/* .start {
-  border-right: 1px solid transparent;
-}
-.end {
-  border-left-color: 1px solid transparent;
-} */
 </style>
