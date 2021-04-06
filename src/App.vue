@@ -82,7 +82,7 @@ export default {
 </script>
 
 <style>
-table {
+/* table {
   border-spacing: 0;
   border-collapse: collapse;
   width: 100%;
@@ -122,5 +122,5 @@ button.cell-control {
 .focused-row.focused-col.selected > *,
 .selected > * {
   background: chartreuse;
-}
+} */
 </style>

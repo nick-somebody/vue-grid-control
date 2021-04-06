@@ -1,11 +1,25 @@
 <template>
   <div>
     <h2>With records</h2>
+    <p>
+      If we pass some records the value will be the corresponding value in the record set.
+      eg.
+      <pre><code>{{`<grid-control
+  :rows="records.length"
+  :columns="3"
+  :records="records"
+  control-tag="button" />`}}</code></pre>
+  Where the records are
+  <pre><code>{{`[
+  {'column1': 'row1, column1', 'column2': 'row1, column2', 'column3': 'row1, column3'},
+  {'column1': 'row2, column1', 'column2': 'row2, column2', 'column3': 'row2, column3'},
+  {'column1': 'row3, column1', 'column2': 'row3, column2', 'column3': 'row3, column3'},
+]`}}</code></pre>
+    </p>
     <grid-control
-      :rows="3"
+      :rows="records.length"
       :columns="3"
       :records="records"
-
       control-tag="button"
       @click-cell-control="clickCell"
       @focus-cell-control="focusCell"
@@ -21,9 +35,9 @@ export default {
   setup() {
     return {
       records: [
-        {'column1': '1, 1', 'column2': '2, 1', 'column3': '3, 1'},
-        {'column1': '1, 2', 'column2': '2, 2', 'column3': '3, 2'},
-        {'column1': '1, 3', 'column2': '2, 3', 'column3': '3, 3'},
+        {'column1': 'row1, column1', 'column2': 'row1, column2', 'column3': 'row1, column3'},
+        {'column1': 'row2, column1', 'column2': 'row2, column2', 'column3': 'row2, column3'},
+        {'column1': 'row3, column1', 'column2': 'row3, column2', 'column3': 'row3, column3'},
       ]
     }
   },
