@@ -29,13 +29,12 @@ const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
           value = record[key];
         }
         const isStart = value === props.start
-        console.log(isStart, value)
         if (isStart) {
           grid.rangeStart = [colIdx, rowIdx]
           // inRange can only be true if there is an end
           inRange = !!props.end
         }
-        const disabled = isStart || props.disableCellFunc(colIdx, rowIdx, value, record);
+        const disabled = props.disableCellFunc(colIdx, rowIdx, value, record);
         grid.map[rowIdx][colIdx] = {
           key,
           value,
@@ -197,7 +196,11 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         this.$emit("blur-grid");
       },
       moveUp() {
-        const col = this.gridMap.cols[this.focusedCol];
+        const [startCol, startRow] = this.gridMap.rangeStart
+        const col = [...this.gridMap.cols[this.focusedCol]];
+        if (startCol === this.focusedCol) {
+          // have to search for next value if target is startRow`
+        }
         const enabledCellIdx = col.indexOf(this.focusedRow);
         if (enabledCellIdx > 0) {
           this.focusedRow = col[enabledCellIdx - 1];
