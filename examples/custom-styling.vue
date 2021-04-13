@@ -2,9 +2,15 @@
   <div>
     <h2>Custom styling</h2>
     <p>
-      The component has styling. In the examples I've styled them with a regular theme.
+      The GridControl component has styling classes applied.
       You can style accordingly.
     </p>
+    <ul>
+      <li><code>.focused-row</code> - to style a row in focus</li>
+      <li><code>.focused-col</code> - to style a column in focus</li>
+      <li><code>.header-focused-col</code> - to style a column in focus's header</li>
+      <li><code>.cell-control</code> - is the class applied to the control that is focused</li>
+    </ul>
     <grid-control class="griddy" :headers="['1', '2', '3', '4', '5', '6', '7', '8']" :rows="5" :columns="8" />
   </div>
 </template>

@@ -24,7 +24,11 @@
           :class="{
             'focused-col': focusedCol === colIdx,
             'focused-row': focusedRow === rowIdx,
-            'selected': modelValue === cell.value,
+            'selected': start === cell.value || end === cell.value,
+            'start': start === cell.value,
+            'end': end === cell.value,
+            'in-range': cell.inRange,
+            'disabled': cell.disabled,
           }"
         >
           <component
@@ -62,11 +66,11 @@
 </template>
 
 <script>
-import GridControl from "./GridControl";
+import GridRangeControl from "./GridRangeControl";
 
 const getFocusedCellElement = (gridBody, { focusedRow, focusedCol }) => {
   return gridBody.value.children[focusedRow].children[focusedCol].firstChild;
 };
 
-export default GridControl(getFocusedCellElement);
+export default GridRangeControl(getFocusedCellElement);
 </script>

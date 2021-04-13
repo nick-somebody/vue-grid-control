@@ -39,6 +39,7 @@
       <dd>As normal</dd>
     </dl>
     <standard-use></standard-use>
+    <model-use></model-use>
     <custom-styling></custom-styling>
     <event-handling></event-handling>
     <with-records></with-records>
@@ -53,6 +54,7 @@
 
 <script>
 import StandardUse from "../examples/standard-use.vue";
+import ModelUse from "../examples/model-use.vue";
 import EventHandling from "../examples/event-handling.vue";
 import WithRecords from "../examples/with-records.vue";
 import WithHeaders from "../examples/with-headers.vue";
@@ -66,6 +68,7 @@ export default {
   name: "App",
   components: {
     StandardUse,
+    ModelUse,
     EventHandling,
     WithRecords,
     WithHeaders,
@@ -93,18 +96,31 @@ button.cell-control {
   color: #000;
 }
 .cell-control {
-  background: #FFF;
   width: 100%;
   height: 100%;
 }
-.focused-row, .focused-col  {
+.focused-row,
+.focused-col,
+.focused-row > *,
+.focused-col > * {
   background: lightblue;
 }
-.cell-control:focus {
+.focused-row.focused-col,
+.focused-row.focused-col > * {
   background: turquoise;
   outline: 2px solid black;
 }
 .cell-control:disabled {
   opacity: 0.4;
+}
+.in-range,
+.in-range > *{
+  background: rgb(200, 255, 200);
+}
+.focused-row.focused-col.selected,
+.selected,
+.focused-row.focused-col.selected > *,
+.selected > * {
+  background: chartreuse;
 }
 </style>

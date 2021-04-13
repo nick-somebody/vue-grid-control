@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import GridControl from '../src/components/GridControl.js'
+import GridControl from '../src/components/GridControl'
 
 const getFocusedCellElement = (gridBody, { focusedRow, focusedCol, rows, columns }) => {
   // this function is the one that will traverse your template for the cell to focus
