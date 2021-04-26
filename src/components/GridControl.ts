@@ -1,8 +1,28 @@
-import { setFirstCol, setFirstRow, setGridEnabledCellInfo } from '@/helpers';
-import { onMounted, ref, computed, reactive, watchEffect, defineComponent, UnwrapRef, Ref, ComputedRef } from "vue";
-import { CellControlEvent, DisableCellFunc, GetFocusedCellElementFunc, Grid } from './grid';
+import { setFirstCol, setFirstRow, setGridEnabledCellInfo } from "@/helpers";
+import {
+  onMounted,
+  ref,
+  computed,
+  reactive,
+  watchEffect,
+  defineComponent,
+  UnwrapRef,
+  Ref,
+  ComputedRef
+} from "vue";
+import {
+  CellControlEvent,
+  DisableCellFunc,
+  GetFocusedCellElementFunc,
+  Grid
+} from "./grid";
 
-const makeGridMap = (rows: number, columns: number, records: any, disableCellFunc: DisableCellFunc): ComputedRef<Grid> => {
+const makeGridMap = (
+  rows: number,
+  columns: number,
+  records: any,
+  disableCellFunc: DisableCellFunc
+): ComputedRef<Grid> => {
   const hasRecords = !!records;
 
   return computed<Grid>(() => {
@@ -55,7 +75,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       "click-cell-control": null,
       "focus-cell-control": null,
       "blur-cell-control": null,
-      "blur-grid": null,
+      "blur-grid": null
     },
     props: {
       columns: {
@@ -77,10 +97,10 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       disableCellFunc: {
         default: () => () => false
       },
-      modelValue: {},
+      modelValue: {}
     },
     setup(props) {
-      const gridBody = ref<unknown | HTMLElement>(null)
+      const gridBody = ref<unknown | HTMLElement>(null);
 
       const gridMap = makeGridMap(
         props.rows,
@@ -114,27 +134,29 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
     },
     methods: {
       emitModel(cellEvent: CellControlEvent) {
-        this.$emit("update:modelValue", cellEvent.value)
+        this.$emit("update:modelValue", cellEvent.value);
       },
       select(cellEvent: CellControlEvent, keyEvent: KeyboardEvent) {
-        if (cellEvent.disabled) { return }
-        this.emitModel(cellEvent)
+        if (cellEvent.disabled) {
+          return;
+        }
+        this.emitModel(cellEvent);
       },
       // for select, need to check if selected already
       shiftClickControl(cellEvent: CellControlEvent) {
         // shift is for range select
-        this.$emit("shift-click-cell-control", cellEvent)
+        this.$emit("shift-click-cell-control", cellEvent);
       },
       ctrlClickControl(cellEvent: CellControlEvent) {
         // ctrl is for multi select
-        this.$emit("ctrl-click-cell-control", cellEvent)
+        this.$emit("ctrl-click-cell-control", cellEvent);
       },
-      getValueAt(place: { colIdx: number, rowIdx: number } ) {
-        return this.gridMap.map[place.rowIdx][place.colIdx]
+      getValueAt(place: { colIdx: number; rowIdx: number }) {
+        return this.gridMap.map[place.rowIdx][place.colIdx];
       },
       clickCellControl(cellEvent: CellControlEvent) {
-        this.$emit("click-cell-control", cellEvent)
-        this.emitModel(cellEvent)
+        this.$emit("click-cell-control", cellEvent);
+        this.emitModel(cellEvent);
       },
       focusCellControl(cellEvent: CellControlEvent) {
         this.focusedRow = cellEvent.rowIdx;
@@ -145,7 +167,10 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         // if we do not get a changed index, focus has left the grid
         this.$emit("blur-cell-control", cellEvent);
         setTimeout(() => {
-          if (this.focusedRow === cellEvent.rowIdx && this.focusedCol === cellEvent.colIdx) {
+          if (
+            this.focusedRow === cellEvent.rowIdx &&
+            this.focusedCol === cellEvent.colIdx
+          ) {
             this.blurGrid();
           }
         }, 0);

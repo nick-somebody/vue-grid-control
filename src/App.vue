@@ -77,7 +77,7 @@ export default {
     CustomStyling,
     SlotUsage,
     CustomTemplateUse
-  },
+  }
 };
 </script>
 
@@ -87,7 +87,8 @@ table {
   border-collapse: collapse;
   width: 100%;
 }
-th, td {
+th,
+td {
   border: 1px solid #333;
   padding: 0;
 }
@@ -114,7 +115,7 @@ button.cell-control {
   opacity: 0.4;
 }
 .in-range,
-.in-range > *{
+.in-range > * {
   background: rgb(200, 255, 200);
 }
 .focused-row.focused-col.selected,

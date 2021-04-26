@@ -1,6 +1,21 @@
-import { setFirstCol, setFirstRow, setGridEnabledCellInfo } from '@/helpers';
-import { onMounted, ref, computed, reactive, watchEffect, defineComponent, UnwrapRef, Ref, ComputedRef } from "vue";
-import { CellControlEvent, DisableCellFunc, GetFocusedCellElementFunc, RangeGrid } from './grid';
+import { setFirstCol, setFirstRow, setGridEnabledCellInfo } from "@/helpers";
+import {
+  onMounted,
+  ref,
+  computed,
+  reactive,
+  watchEffect,
+  defineComponent,
+  UnwrapRef,
+  Ref,
+  ComputedRef
+} from "vue";
+import {
+  CellControlEvent,
+  DisableCellFunc,
+  GetFocusedCellElementFunc,
+  RangeGrid
+} from "./grid";
 
 const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
   const hasRecords = !!props.records;
@@ -13,7 +28,7 @@ const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
       lastPosition: [-1, -1], // last  enabled position in grid
       firstPosition: [-1, -1], // first  enabled position in grid
       rangeStart: [-1, -1],
-      rangeEnd: [-1, -1],
+      rangeEnd: [-1, -1]
     };
     let inRange = false;
     for (let rowIdx = 0; rowIdx < props.rows; rowIdx++) {
@@ -28,11 +43,11 @@ const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
           key = keys[colIdx];
           value = record[key];
         }
-        const isStart = value === props.start
+        const isStart = value === props.start;
         if (isStart) {
-          grid.rangeStart = [colIdx, rowIdx]
+          grid.rangeStart = [colIdx, rowIdx];
           // inRange can only be true if there is an end
-          inRange = !!props.end
+          inRange = !!props.end;
         }
         const disabled = props.disableCellFunc(colIdx, rowIdx, value, record);
         grid.map[rowIdx][colIdx] = {
@@ -45,8 +60,8 @@ const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
           rowData: record
         };
         if (value === props.end) {
-          grid.rangeEnd = [colIdx, rowIdx]
-          inRange = false
+          grid.rangeEnd = [colIdx, rowIdx];
+          inRange = false;
         }
         if (!grid.cols[colIdx]) {
           grid.cols[colIdx] = [];
@@ -70,7 +85,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       "click-cell-control": null,
       "focus-cell-control": null,
       "blur-cell-control": null,
-      "blur-grid": null,
+      "blur-grid": null
     },
     props: {
       columns: {
@@ -93,14 +108,12 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         default: () => () => false
       },
       start: {},
-      end: {},
+      end: {}
     },
     setup(props) {
-      const gridBody = ref<unknown | HTMLElement>(null)
+      const gridBody = ref<unknown | HTMLElement>(null);
 
-      const gridMap = makeGridMap(
-        props
-      );
+      const gridMap = makeGridMap(props);
 
       const data = reactive({
         focusedRow: -1,
@@ -109,7 +122,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         firstSelectCol: -1,
         gridBody,
         gridMap,
-        startEvent: null as any,
+        startEvent: null as any
       });
 
       onMounted(() => {
@@ -127,51 +140,64 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
       return data;
     },
     methods: {
-      isRangeStart(event1: CellControlEvent, event2: CellControlEvent): boolean {
-        if (event1.rowIdx < event2.rowIdx) { return true }
-        if (event1.rowIdx > event2.rowIdx) { return false }
-        return event1.colIdx < event2.colIdx
+      isRangeStart(
+        event1: CellControlEvent,
+        event2: CellControlEvent
+      ): boolean {
+        if (event1.rowIdx < event2.rowIdx) {
+          return true;
+        }
+        if (event1.rowIdx > event2.rowIdx) {
+          return false;
+        }
+        return event1.colIdx < event2.colIdx;
       },
       emitModel(cellEvent: CellControlEvent) {
         if (!this.startEvent) {
-          this.$emit("update:start", cellEvent.value)
-          this.$emit("update:end", null)
-          this.startEvent = cellEvent
-
+          this.$emit("update:start", cellEvent.value);
+          this.$emit("update:end", null);
+          this.startEvent = cellEvent;
         } else {
           if (this.isRangeStart(this.startEvent, cellEvent)) {
-            this.$emit("update:start", this.startEvent.value)
-            this.$emit("update:end", cellEvent.value)
+            this.$emit("update:start", this.startEvent.value);
+            this.$emit("update:end", cellEvent.value);
           } else {
-            this.$emit("update:start", cellEvent.value)
-            this.$emit("update:end", this.startEvent.value)
+            this.$emit("update:start", cellEvent.value);
+            this.$emit("update:end", this.startEvent.value);
           }
-          this.startEvent = null
+          this.startEvent = null;
         }
-
       },
       select(cellEvent: CellControlEvent, keyEvent: KeyboardEvent) {
-        if (cellEvent.disabled) { return }
-        this.emitModel(cellEvent)
+        if (cellEvent.disabled) {
+          return;
+        }
+        this.emitModel(cellEvent);
       },
       // for select, need to check if selected already
       shiftClickControl(cellEvent: CellControlEvent) {
-        if (cellEvent.disabled) { return }
+        if (cellEvent.disabled) {
+          return;
+        }
         // shift is for range select
-        this.$emit("shift-click-cell-control", cellEvent)
+        this.$emit("shift-click-cell-control", cellEvent);
       },
       ctrlClickControl(cellEvent: CellControlEvent) {
-        if (cellEvent.disabled) { return }
+        if (cellEvent.disabled) {
+          return;
+        }
         // ctrl is for multi select
-        this.$emit("ctrl-click-cell-control", cellEvent)
+        this.$emit("ctrl-click-cell-control", cellEvent);
       },
-      getValueAt(place: { colIdx: number, rowIdx: number } ) {
-        return this.gridMap.map[place.rowIdx][place.colIdx]
+      getValueAt(place: { colIdx: number; rowIdx: number }) {
+        return this.gridMap.map[place.rowIdx][place.colIdx];
       },
       clickCellControl(cellEvent: CellControlEvent) {
-        if (cellEvent.disabled) { return }
-        this.$emit("click-cell-control", cellEvent)
-        this.emitModel(cellEvent)
+        if (cellEvent.disabled) {
+          return;
+        }
+        this.$emit("click-cell-control", cellEvent);
+        this.emitModel(cellEvent);
       },
       focusCellControl(cellEvent: CellControlEvent) {
         this.focusedRow = cellEvent.rowIdx;
@@ -182,7 +208,10 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         // if we do not get a changed index, focus has left the grid
         this.$emit("blur-cell-control", cellEvent);
         setTimeout(() => {
-          if (this.focusedRow === cellEvent.rowIdx && this.focusedCol === cellEvent.colIdx) {
+          if (
+            this.focusedRow === cellEvent.rowIdx &&
+            this.focusedCol === cellEvent.colIdx
+          ) {
             this.blurGrid();
           }
         }, 0);
@@ -196,7 +225,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         this.$emit("blur-grid");
       },
       moveUp() {
-        const [startCol, startRow] = this.gridMap.rangeStart
+        const [startCol, startRow] = this.gridMap.rangeStart;
         const col = [...this.gridMap.cols[this.focusedCol]];
         if (startCol === this.focusedCol) {
           // have to search for next value if target is startRow`

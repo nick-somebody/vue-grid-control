@@ -24,7 +24,7 @@
           :class="{
             'focused-col': focusedCol === colIdx,
             'focused-row': focusedRow === rowIdx,
-            'selected': modelValue === cell.value,
+            selected: modelValue === cell.value
           }"
         >
           <component

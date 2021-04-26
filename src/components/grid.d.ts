@@ -1,14 +1,14 @@
 export interface Grid {
   map: {
     [rowIdx: string]: {
-      [colIdx: string]: any
-    }
+      [colIdx: string]: any;
+    };
   };
   rows: {
-    [rowIdx: string]: number[]
+    [rowIdx: string]: number[];
   };
   cols: {
-    [colIdx: string]: number[]
+    [colIdx: string]: number[];
   };
   lastPosition: number[2];
   firstPosition: number[2];
@@ -33,7 +33,7 @@ export type GetFocusedCellElementFunc = (
     rows: number;
     columns: number;
   }
-) => HTMLElement
+) => HTMLElement;
 
 export interface CellControlEvent {
   colIdx: number;

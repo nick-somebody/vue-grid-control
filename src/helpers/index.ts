@@ -12,7 +12,11 @@ export const setFirstRow = (grid: Grid, rowIdx: number) => {
   }
 };
 
-export const setGridEnabledCellInfo = (grid: Grid, colIdx: number, rowIdx: number) => {
+export const setGridEnabledCellInfo = (
+  grid: Grid,
+  colIdx: number,
+  rowIdx: number
+) => {
   grid.rows[rowIdx].push(colIdx);
   grid.cols[colIdx].push(rowIdx);
 

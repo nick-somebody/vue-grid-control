@@ -24,11 +24,11 @@
           :class="{
             'focused-col': focusedCol === colIdx,
             'focused-row': focusedRow === rowIdx,
-            'selected': start === cell.value || end === cell.value,
-            'start': start === cell.value,
-            'end': end === cell.value,
+            selected: start === cell.value || end === cell.value,
+            start: start === cell.value,
+            end: end === cell.value,
             'in-range': cell.inRange,
-            'disabled': cell.disabled,
+            disabled: cell.disabled
           }"
         >
           <component
