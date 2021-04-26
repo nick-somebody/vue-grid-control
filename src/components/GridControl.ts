@@ -1,4 +1,4 @@
-import { setFirstCol, setFirstRow, setGridEnabledCellInfo } from "@/helpers";
+import { setGridEnabledCellInfo } from "@/helpers";
 import {
   onMounted,
   ref,
@@ -6,9 +6,8 @@ import {
   reactive,
   watchEffect,
   defineComponent,
-  UnwrapRef,
-  Ref,
-  ComputedRef
+  ComputedRef,
+  Prop
 } from "vue";
 import {
   CellControlEvent,
@@ -16,6 +15,15 @@ import {
   GetFocusedCellElementFunc,
   Grid
 } from "./grid";
+
+interface Props {
+  rows: number;
+  columns: number;
+  records: any;
+  controlTag: string;
+  headers: string[];
+  disableCellFunc: DisableCellFunc;
+}
 
 const makeGridMap = (
   rows: number,
@@ -90,7 +98,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         default: "div"
       },
       records: { default: null },
-      headers: {},
+      headers: [],
       // pass a function that will be given the following arguments
       // colIdx, rowIdx, value, rowData
       // a return value of true will disable this cell

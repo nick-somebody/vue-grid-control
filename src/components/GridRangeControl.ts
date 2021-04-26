@@ -1,4 +1,4 @@
-import { setFirstCol, setFirstRow, setGridEnabledCellInfo } from "@/helpers";
+import { setGridEnabledCellInfo } from "@/helpers";
 import {
   onMounted,
   ref,
@@ -6,8 +6,6 @@ import {
   reactive,
   watchEffect,
   defineComponent,
-  UnwrapRef,
-  Ref,
   ComputedRef
 } from "vue";
 import {
@@ -17,7 +15,18 @@ import {
   RangeGrid
 } from "./grid";
 
-const makeGridMap = (props: any): ComputedRef<RangeGrid> => {
+interface Props {
+  rows: number;
+  columns: number;
+  records: any;
+  controlTag: string;
+  headers: string[];
+  disableCellFunc: DisableCellFunc;
+  start: number;
+  end: number;
+}
+
+const makeGridMap = (props: Props): ComputedRef<RangeGrid> => {
   const hasRecords = !!props.records;
 
   return computed<RangeGrid>(() => {
@@ -100,7 +109,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
         default: "div"
       },
       records: { default: null },
-      headers: {},
+      headers: [],
       // pass a function that will be given the following arguments
       // colIdx, rowIdx, value, rowData
       // a return value of true will disable this cell
@@ -113,7 +122,7 @@ export default (getFocusedCellElement: GetFocusedCellElementFunc) => {
     setup(props) {
       const gridBody = ref<unknown | HTMLElement>(null);
 
-      const gridMap = makeGridMap(props);
+      const gridMap = makeGridMap(props as Props);
 
       const data = reactive({
         focusedRow: -1,
